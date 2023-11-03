@@ -141,39 +141,6 @@ def standardize_columns(df: pd.DataFrame, columns: list = None, inplace: bool = 
         
     return standardized_df
 
-def preprocess(df: pd.DataFrame, columns: list = None, inplace: bool = False):
-    """Preprocess the given columns of a dataframe.
-    
-    Parameters
-    ----------
-    df : pd.DataFrame
-        The dataframe to preprocess.
-    columns : list, optional
-        The columns to preprocess. If None, all columns are preprocessed.
-        The default is None.
-    inplace : bool, optional
-        Whether to modify the dataframe in place. The default is False.
-    
-    Returns
-    -------
-    pd.DataFrame
-        The preprocessed dataframe.
-    """
-    
-    preprocessed_df = df
-    
-    if columns is None:
-        columns = df.select_dtypes(include=['float64', 'int64']).columns
-    
-    if not inplace:
-        preprocessed_df = df.copy()
-        
-    preprocessed_df = normalize_columns(preprocessed_df, columns=columns, inplace=True)
-    preprocessed_df = imputation(preprocessed_df, columns=columns, inplace=True)
-    preprocessed_df = standardize_columns(preprocessed_df, columns=columns, inplace=True)
-    
-    return preprocessed_df
-
 def signum_encode(df: pd.DataFrame, column:str, class1:str, class2:str,
                   inplace: bool = False, replace: bool = False):
     """Signum encode the given columns of a dataframe.
@@ -215,5 +182,35 @@ def signum_encode(df: pd.DataFrame, column:str, class1:str, class2:str,
         
     return signum_encoded_df
 
-
+def label_encode(df: pd.DataFrame, column:str, inplace: bool = False, replace: bool = False):
+    """Label encode the given columns of a dataframe.
     
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The dataframe to label encode.
+    column : str
+        The column to label encode.    
+    inplace : bool, optional
+        Whether to modify the dataframe in place. The default is False.
+    replace : bool, optional
+        Whether to replace the original column. The default is False.
+    
+    Returns
+    -------
+    pd.DataFrame
+        The label encoded dataframe.
+    """
+    
+    label_encoded_df = df
+    
+    if not inplace:
+        label_encoded_df = df.copy()
+        
+    if not replace:
+        add_column = column + "_label"
+        label_encoded_df[add_column] = label_encoded_df[column].astype('category').cat.codes
+    else:
+        label_encoded_df[column] = label_encoded_df[column].astype('category').cat.codes
+        
+    return label_encoded_df
