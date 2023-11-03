@@ -141,8 +141,7 @@ def standardize_columns(df: pd.DataFrame, columns: list = None, inplace: bool = 
         
     return standardized_df
 
-def signum_encode(df: pd.DataFrame, column:str, class1:str, class2:str,
-                  inplace: bool = False, replace: bool = False):
+def signum_encode(df: pd.DataFrame, column:str, class1:str, class2:str, replace: bool = True):
     """Signum encode the given columns of a dataframe.
     
     Parameters
@@ -166,20 +165,16 @@ def signum_encode(df: pd.DataFrame, column:str, class1:str, class2:str,
         The signum encoded dataframe.
     """
     
-    signum_encoded_df = df
-    
-    if not inplace:
-        signum_encoded_df = df.copy()
+    signum_encoded_df = df.copy()
 
     # filter out the rows that are not class1 or class2
     signum_encoded_df = signum_encoded_df[(signum_encoded_df[column] == class1) | (signum_encoded_df[column] == class2)] 
     if not replace:        
         add_column = column + "_signum"
         signum_encoded_df[add_column] = signum_encoded_df[column]
-        signum_encoded_df[add_column] = signum_encoded_df[add_column].apply(lambda x: 1 if x == class1 else -1)
+        signum_encoded_df.loc[:, add_column] = signum_encoded_df[add_column].apply(lambda x: 1 if x == class1 else -1).astype('float64')        
     else:
-        signum_encoded_df[column] = signum_encoded_df[column].apply(lambda x: 1 if x == class1 else -1)
-        
+        signum_encoded_df.loc[:, column] = signum_encoded_df[column].apply(lambda x: 1 if x == class1 else -1).astype('float64')
     return signum_encoded_df
 
 def label_encode(df: pd.DataFrame, column:str, inplace: bool = False, replace: bool = False):
@@ -214,3 +209,28 @@ def label_encode(df: pd.DataFrame, column:str, inplace: bool = False, replace: b
         label_encoded_df[column] = label_encoded_df[column].astype('category').cat.codes
         
     return label_encoded_df
+
+
+def train_test_split(df: pd.DataFrame, test_size: float = 0.4, random_state: int = 78):
+    """Split the dataframe into training and testing sets.
+    
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The dataframe to split.
+    test_size : float, optional
+        The size of the testing set. The default is 0.2.
+    
+    Returns
+    -------
+    pd.DataFrame
+        The training set.
+    pd.DataFrame
+        The testing set.
+    """
+    
+    train = df.sample(frac=1 - test_size , random_state=random_state)
+    test = df.drop(train.index)
+    
+    return train, test
+

@@ -17,3 +17,13 @@ def leaky_relu(x, alpha=0.01):
 
 def linear(x):
     return x
+
+def softmax(x):
+    return np.exp(x) / np.sum(np.exp(x), axis=0)
+
+def softmax_stable(x):
+    exps = np.exp(x - np.max(x))
+    return exps / np.sum(exps, axis=0)
+
+def vectorized_activation(x: np.ndarray, func: callable):
+    return np.vectorize(func)(x)
