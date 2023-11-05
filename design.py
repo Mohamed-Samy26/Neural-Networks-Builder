@@ -20,7 +20,7 @@ customtkinter.set_default_color_theme(
 app = customtkinter.CTk()
 
 app.geometry("1920x1080")
-app.title("Fino Nino")
+app.title("Bean Classification")
 
 
 def is_number(value):
