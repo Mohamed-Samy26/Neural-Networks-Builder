@@ -1,0 +1,6 @@
+CTkMessagebox==2.5
+customtkinter==5.2.1
+matplotlib==3.5.2
+numpy==1.25.2
+pandas==1.4.2
+python_tkdnd==0.2.1
