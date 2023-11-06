@@ -136,8 +136,8 @@ def pickFeature2(pickedFeature):
     else:
         print(f"{pickedFeature} not found in the list.")
 
-screen_width = app.winfo_screenwidth()
-screen_height = app.winfo_screenheight()
+screen_width = app.winfo_screenwidth() //2
+screen_height = app.winfo_screenheight() //2
 
 frame = customtkinter.CTkScrollableFrame(master=app, width=screen_width, height=screen_height)
 frame.grid(row=0, column=0, sticky="nsew")
@@ -147,7 +147,7 @@ app.grid_rowconfigure(0, weight=1)
 app.grid_columnconfigure(0, weight=1)
 
 frame_2 = customtkinter.CTkFrame(master=frame)
-frame_2.pack(pady=20, padx=60, fill="both")
+frame_2.pack(pady=0, padx=60, fill="both")
 
 frame_2.columnconfigure(0, weight=1)
 frame_2.columnconfigure(1, weight=1)
@@ -159,36 +159,36 @@ frame_1.pack(pady=20, padx=60, fill="both")
 # bad anchor "subset": must be n, ne, e, se, s, sw, w, nw, or center
 customtkinter.CTkLabel(
     master=frame_2, text="First Feature", font=("Arial Bold", 16)
-).grid(column=0, row=0, sticky="w", pady=(20, 5), padx=(400, 0))
+).grid(column=0, row=0, sticky="w", pady=(5, 5), padx=(20, 0))
 first_feature = customtkinter.CTkComboBox(
     frame_2, values=features, command=pickFeature1, width=170
 )
-first_feature.grid(column=0, row=1, sticky="w", pady=(10, 20), padx=(400, 0))
+first_feature.grid(column=0, row=1, sticky="w", pady=(10, 20), padx=(20, 0))
 first_feature.set("Select First Feature")
 
 customtkinter.CTkLabel(
     master=frame_2, text="Second Feature", font=("Arial Bold", 16)
-).grid(column=0, row=2, sticky="w", pady=(20, 5), padx=(400, 0))
+).grid(column=0, row=2, sticky="w", pady=(5, 5), padx=(20, 0))
 
 second_feature = customtkinter.CTkComboBox(
     frame_2, values=features, command=pickFeature2, width=170
 )
-second_feature.grid(column=0, row=3, sticky="w", pady=(10, 20), padx=(400, 0))
+second_feature.grid(column=0, row=3, sticky="w", pady=(10, 20), padx=(20, 0))
 second_feature.set("Select Second Feature")
 
 customtkinter.CTkLabel(master=frame_2, text="Classes", font=("Arial Bold", 16)).grid(
-    column=1, row=0, sticky="w", pady=(20, 5), padx=(130, 0)
+    column=1, row=0, sticky="w", pady=(5, 5), padx=(15, 0)
 )
 
 classes = customtkinter.CTkComboBox(
     frame_2, values=["BOMBAY & CALI", "CALI & SIRA", "SIRA & BOMBAY"]
 )
-classes.grid(column=1, row=1, sticky="w", pady=(10, 20), padx=(130, 0))
+classes.grid(column=1, row=1, sticky="w", pady=(10, 20), padx=(15, 0))
 classes.set("Select Classes")
 
 
 customtkinter.CTkLabel(master=frame_2, text="Algorithm", font=("Arial Bold", 20)).grid(
-    column=1, row=2, sticky="w", pady=(20, 0), padx=(130, 0)
+    column=1, row=2, sticky="w", pady=(5, 0), padx=(15, 0)
 )
 
 isPerceptron = customtkinter.IntVar(value=0)
@@ -196,19 +196,19 @@ isPerceptron = customtkinter.IntVar(value=0)
 radiobutton_1 = customtkinter.CTkRadioButton(
     frame_2, variable=isPerceptron, text="Perceptron", value=0
 )
-radiobutton_1.grid(column=1, row=3, sticky="w", pady=(20, 20), padx=(130, 0))
+radiobutton_1.grid(column=1, row=3, sticky="w", pady=(0, 0), padx=(15, 0))
 
 radiobutton_2 = customtkinter.CTkRadioButton(
     frame_2, variable=isPerceptron, text="Adaline", value=1
 )
-radiobutton_2.grid(column=1, row=4, sticky="w", pady=(20, 20), padx=(130, 0))
+radiobutton_2.grid(column=1, row=4, sticky="w", pady=(0, 0), padx=(15, 0))
 
 bias = customtkinter.CTkCheckBox(frame_2, text="Bias")
-bias.grid(column=0, row=5, sticky="e", pady=(20, 20), padx=(0, 130))
+bias.grid(column=0, row=5, sticky="e", pady=(0, 0), padx=(0, 15))
 
 customtkinter.CTkLabel(
     master=frame_1, text="Learning Rate", font=("Arial Bold", 16), justify="left"
-).pack(anchor="w", pady=(20, 7), padx=(25))
+).pack(anchor="w", pady=(5, 7), padx=(25))
 
 learning_rate = customtkinter.CTkEntry(
     master=frame_1,
