@@ -6,12 +6,17 @@ import matplotlib.pyplot as plt
 
 class Perceptron:
     def __init__(
-        self, epochs: int = 20, learning_rate: float = 0.01, bias: float = 0.0
+        self, epochs: int = 20, learning_rate: float = 0.01, bias: float = 0.0, use_bias=True
     ):
         self.epochs = epochs
         self.learning_rate = learning_rate
         self.weight = np.random.rand(2)
-        self.bias = bias
+        self.use_bias = use_bias
+        if use_bias:
+            self.bias = bias
+        else:
+            self.bias = 0      
+        
 
     def forward(self, X: np.ndarray):
         # y = w1*x1 + w2*x2 + b
@@ -21,7 +26,9 @@ class Perceptron:
         y_pred = self.forward(X)
         error = Y - y_pred  # Calculate the error
         self.weight += self.learning_rate * np.dot(X.T, error)  # Update weights
-        self.bias += self.learning_rate * np.sum(error)  # Update bias
+        
+        if self.use_bias:
+            self.bias += self.learning_rate * np.sum(error)  # Update bias
 
     def train(self, X: np.ndarray, Y: np.ndarray):
         for _ in range(self.epochs):
