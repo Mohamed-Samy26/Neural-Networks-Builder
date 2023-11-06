@@ -1,6 +1,7 @@
-import adaline as ad
+
+from project.models import adaline as ad
 import pandas as pd
-import preprocessing as pp
+from project.helpers import preprocessing as pp
 
 
 def main():
