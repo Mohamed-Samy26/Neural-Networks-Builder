@@ -136,15 +136,24 @@ def pickFeature2(pickedFeature):
     else:
         print(f"{pickedFeature} not found in the list.")
 
+screen_width = app.winfo_screenwidth()
+screen_height = app.winfo_screenheight()
 
-frame_2 = customtkinter.CTkFrame(master=app)
+frame = customtkinter.CTkScrollableFrame(master=app, width=screen_width, height=screen_height)
+frame.grid(row=0, column=0, sticky="nsew")
+
+# Make the frame expand to fill the window
+app.grid_rowconfigure(0, weight=1)
+app.grid_columnconfigure(0, weight=1)
+
+frame_2 = customtkinter.CTkFrame(master=frame)
 frame_2.pack(pady=20, padx=60, fill="both")
 
 frame_2.columnconfigure(0, weight=1)
 frame_2.columnconfigure(1, weight=1)
 # frame_2.rowconfigure(0 , weight=1)
 
-frame_1 = customtkinter.CTkFrame(master=app)
+frame_1 = customtkinter.CTkFrame(master=frame)
 frame_1.pack(pady=20, padx=60, fill="both")
 
 # bad anchor "subset": must be n, ne, e, se, s, sw, w, nw, or center
@@ -247,7 +256,7 @@ mse_threshold.pack(fill="x", anchor="w", padx=(25), pady=(0, 25))
 
 
 Classify = customtkinter.CTkButton(
-    app, command=button_callback, font=("Arial Bold", 20), text="Classify", height=100
+    frame, command=button_callback, font=("Arial Bold", 20), text="Classify", height=100
 )
 Classify.pack(fill="x", anchor="w", padx=(60))
 
