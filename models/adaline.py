@@ -6,12 +6,14 @@ import matplotlib.pyplot as plt
 
 class Adaline:
     def __init__(
-        self, epochs: int = 10, learning_rate: float = 0.01, bias: float = 0.0, use_bias=True
+        self, epochs: int = 10, learning_rate: float = 0.01, bias: float = 0.0, use_bias=True,
+        mse_threshold=None
     ):
         self.epochs = epochs
         self.learning_rate = learning_rate
         self.weight = np.random.rand(2)
         self.use_bias = use_bias
+        self.mse_threshold = mse_threshold        
         if use_bias:
             self.bias = bias
         else:
@@ -29,10 +31,14 @@ class Adaline:
         
         if self.use_bias:
             self.bias += self.learning_rate * np.sum(error)  # Update bias
+        
+        return np.mean(error**2)
 
     def train(self, X: np.ndarray, Y: np.ndarray):
         for _ in range(self.epochs):
-            self.backward(X, Y)
+            mse = self.backward(X, Y)
+            if self.mse_threshold is not None and mse < self.mse_threshold:
+                break
 
     def predict(self, X: np.ndarray):
         return af.vectorized_activation(self.forward(X), af.signum)

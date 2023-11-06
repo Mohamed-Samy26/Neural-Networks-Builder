@@ -4,38 +4,6 @@ import pandas as pd
 from helpers import preprocessing as pp
 
 
-def main():
-    adaline = ad.Adaline(epochs=10, learning_rate=0.01, bias=0.02)
-    main_df = pd.read_excel("Dry_Bean_Dataset.xlsx")
-    train, test = pp.train_test_split(main_df, test_size=0.4, random_state=78)
-
-    train = pp.imputation(train, inplace=True)
-    train = pp.standardize_columns(train, inplace=True)
-    train = pp.normalize_columns(train, inplace=True)
-    train = pp.signum_encode(train, class1="BOMBAY", class2="CALI", column="Class")
-
-    X = train[["Area", "Perimeter"]]
-    Y = train["Class"]
-
-    print(adaline)
-    adaline.train(X, Y)
-    print(adaline)
-
-    test = pp.imputation(test, inplace=True)
-    test = pp.standardize_columns(test, inplace=True)
-    test = pp.normalize_columns(test, inplace=True)
-    test = pp.signum_encode(test, class1="BOMBAY", class2="CALI", column="Class")
-
-    x_test = test[["Area", "Perimeter"]]
-    y_test = test["Class"]
-
-    print(adaline.accuracy(x_test, y_test))
-    adaline.plot_decision_boundary(
-        x_test, y_test, feature_names=["Area", "Perimeter"], labels=["BOMBAY", "CALI"]
-    )
-    adaline.plot_confusion_matrix(x_test, y_test, labels=["BOMBAY", "CALI"])
-    
-
 def infer_adaline(feature1, feature2, y_col= "Class", labels=["BOMBAY", "CALI"],
                   epochs=10, learning_rate=0.01, bias=0.02,
                   use_bias=True, mse_threshold=0, df=None, test_size=0.4, random_state=78):
@@ -46,7 +14,8 @@ def infer_adaline(feature1, feature2, y_col= "Class", labels=["BOMBAY", "CALI"],
     if df is None:
         df = pd.read_excel("Dry_Bean_Dataset.xlsx")
     main_df = df.copy()
-    adaline = ad.Adaline(epochs=epochs, learning_rate=learning_rate, bias=bias)
+    adaline = ad.Adaline(epochs=epochs, learning_rate=learning_rate, bias=bias, use_bias=use_bias,
+                         mse_threshold=mse_threshold)
     train, test = pp.train_test_split(main_df, test_size=test_size, random_state=random_state)
 
     train = pp.imputation(train, inplace=True)
