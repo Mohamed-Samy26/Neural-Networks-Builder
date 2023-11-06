@@ -1,13 +1,12 @@
 import numpy as np
 import pandas as pd
-import activation_functions as af
-import metrics as mt
+from project.helpers import activation_functions as af, metrics as mt
 import matplotlib.pyplot as plt
 
 
-class Adaline:
+class Perceptron:
     def __init__(
-        self, epochs: int = 10, learning_rate: float = 0.01, bias: float = 0.0
+        self, epochs: int = 20, learning_rate: float = 0.01, bias: float = 0.0
     ):
         self.epochs = epochs
         self.learning_rate = learning_rate
@@ -16,7 +15,7 @@ class Adaline:
 
     def forward(self, X: np.ndarray):
         # y = w1*x1 + w2*x2 + b
-        return af.linear(np.dot(X, self.weight) + self.bias)
+        return af.signum(np.dot(X, self.weight) + self.bias)
 
     def backward(self, X: np.ndarray, Y: np.ndarray):
         y_pred = self.forward(X)
@@ -65,7 +64,7 @@ class Adaline:
         plt.ylim(yy.min(), yy.max())
         plt.xlabel(feature_names[0])
         plt.ylabel(feature_names[1])
-        plt.title("Adaline Decision Boundary")
+        plt.title("SLP Decision Boundary")
         plt.legend()
         plt.show()
 
@@ -99,4 +98,4 @@ class Adaline:
         plt.show()
 
     def __str__(self):
-        return f"Adaline(epochs={self.epochs}, learning_rate={self.learning_rate}, bias={self.bias}), weights={self.weight}"
+        return f"SLP(epochs={self.epochs}, learning_rate={self.learning_rate}, bias={self.bias}), weights={self.weight}"
