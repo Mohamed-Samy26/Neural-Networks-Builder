@@ -1,11 +1,11 @@
 
-from project.models import adaline as ad
+from models import adaline as ad
 import pandas as pd
-from project.helpers import preprocessing as pp
+from helpers import preprocessing as pp
 
 
 def main():
-    adaline = ad.Adaline(epochs=30, learning_rate=0.0001, bias=0.02)
+    adaline = ad.Adaline(epochs=10, learning_rate=0.01, bias=0.02)
     main_df = pd.read_excel("Dry_Bean_Dataset.xlsx")
     train, test = pp.train_test_split(main_df, test_size=0.4, random_state=78)
 

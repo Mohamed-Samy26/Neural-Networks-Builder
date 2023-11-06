@@ -1,6 +1,6 @@
-from project.models import Perceptron as model
+from models import Perceptron as model
 import pandas as pd
-from project.helpers import preprocessing as pre
+from helpers import preprocessing as pre
 
 
 def train_perceptron(epochs: int,

@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-from project.helpers import activation_functions as af, metrics as mt
+from helpers import activation_functions as af, metrics as mt
 import matplotlib.pyplot as plt
 
 
