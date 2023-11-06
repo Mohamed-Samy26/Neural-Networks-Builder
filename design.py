@@ -19,7 +19,7 @@ customtkinter.set_default_color_theme(
 
 app = customtkinter.CTk()
 
-app.geometry("1920x1080")
+app.after(0, lambda:app.state('zoomed'))
 app.title("Bean Classification")
 
 
@@ -225,6 +225,7 @@ epochs = customtkinter.CTkEntry(
     border_width=0,
     corner_radius=5,
     height=50,
+    text_color="#000000",
 )
 epochs.pack(fill="x", anchor="w", padx=(25))
 
@@ -240,6 +241,7 @@ mse_threshold = customtkinter.CTkEntry(
     border_width=0,
     corner_radius=5,
     height=50,
+    text_color="#000000",
 )
 mse_threshold.pack(fill="x", anchor="w", padx=(25), pady=(0, 25))
 
