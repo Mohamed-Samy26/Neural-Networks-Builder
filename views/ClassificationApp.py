@@ -162,28 +162,6 @@ class ClassificationApp:
         )
         self.mse_threshold.pack(fill="x", anchor="w", padx=(25), pady=(0, 25))
 
-        self.custom_label = customtkinter.CTkLabel(
-            master=self.frame_1,
-            text="Custom Input",
-            font=("Arial Bold", 16),
-            justify="left",
-        )
-        self.custom_label.pack(anchor="w", padx=(60))
-
-        self.custom_input = customtkinter.CTkEntry(
-            master=self.frame_1,
-            placeholder_text="Please enter a numeric value",
-            fg_color="#f9fdff",
-            font=("Arial Bold", 16),
-            border_width=0,
-            corner_radius=5,
-            height=50,
-            text_color="#000000",
-            justify="left",
-        )
-        self.custom_input.pack(fill="x", anchor="w", padx=(60))
-
-
         self.Classify = customtkinter.CTkButton(
             self.frame,
             command=self.button_callback,
@@ -192,9 +170,6 @@ class ClassificationApp:
             height=100,
         )
         self.Classify.pack(fill="x", anchor="w", padx=(60))
-
-
-
 
     def is_number(self, value):
         try:
@@ -313,9 +288,7 @@ class ClassificationApp:
         if bias_value == 0:
             return False
         return True
-    def custom_input_callback(self):
-        # Add your custom button logic here
-        pass
+
     def button_callback(self):
         (
             validated,
@@ -336,7 +309,6 @@ class ClassificationApp:
         print("Class:", classes_value)
         print("Bias:", self.bias.get())
         print("Algorithm:", self.isPerceptron.get())
-        print("Custom Button Text:", self.custom_button['text'])
 
         if self.isPerceptron.get() == 0:
             slp_controller.infer_slp(
