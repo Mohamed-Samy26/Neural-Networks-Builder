@@ -1,3 +1,2 @@
-from .adaline import Adaline
+from .Adaline import Adaline
 from .Perceptron import Perceptron
-
