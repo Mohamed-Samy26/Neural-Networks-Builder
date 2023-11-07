@@ -16,7 +16,7 @@ def infer_slp(feature1, feature2, y_col= "Class", labels=["BOMBAY", "CALI"],
     main_df = df.copy()
     model = slp.Perceptron(epochs=epochs, learning_rate=learning_rate, bias=bias, use_bias=use_bias,
                          mse_threshold=mse_threshold)
-    train, test = pp.train_test_split(main_df, test_size=test_size, random_state=random_state)
+    train, test = pp.split_by_class(main_df, labels,test_size=test_size, random_state=random_state)
 
     train = pp.imputation(train, inplace=True)
     train = pp.standardize_columns(train, inplace=True)

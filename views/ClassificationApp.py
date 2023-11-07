@@ -24,7 +24,7 @@ class ClassificationApp:
             "Perimeter",
             "MajorAxisLength",
             "MinorAxisLength",
-            "roundness",
+            "roundnes",
         ]
 
         # Initialize variables to track the selected features in each combobox

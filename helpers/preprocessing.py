@@ -260,3 +260,37 @@ def train_test_split(df: pd.DataFrame, test_size: float = 0.4, random_state: int
     test = df.drop(train.index)
 
     return train, test
+
+def split_by_class(df: pd.DataFrame, labels: list[str], test_size: float = 0.4, random_state: int = 78,
+                   class_column: str = "Class"):
+    """Split the dataframe into training and testing sets.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The dataframe to split.
+    test_size : float, optional
+        The size of the testing set. The default is 0.4.
+    random_state : int, optional
+        The random state to use for reproducibility. The default is 78.
+    class_column : str, optional
+    labels : list[str]
+        The labels to split by.
+
+    Returns
+    -------
+    pd.DataFrame
+        The training set.
+    pd.DataFrame
+        The testing set.
+    """
+
+    train = pd.DataFrame()
+    test = pd.DataFrame()
+    for label in labels:
+        label_df = df[df[class_column] == label]
+        label_train, label_test = train_test_split(label_df, test_size=test_size, random_state=random_state)
+        train = train.append(label_train)
+        test = test.append(label_test)
+
+    return train, test
