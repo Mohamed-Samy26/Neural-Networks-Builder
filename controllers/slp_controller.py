@@ -1,5 +1,5 @@
 
-from models import Perceptron as slp
+from models import Perceptron
 import pandas as pd
 from helpers import preprocessing as pp
 
@@ -14,7 +14,7 @@ def infer_slp(feature1, feature2, y_col= "Class", labels=["BOMBAY", "CALI"],
     if df is None:
         df = pd.read_excel("Dry_Bean_Dataset.xlsx")
     main_df = df.copy()
-    model = slp.Perceptron(epochs=epochs, learning_rate=learning_rate, bias=bias, use_bias=use_bias,
+    model = Perceptron(epochs=epochs, learning_rate=learning_rate, bias=bias, use_bias=use_bias,
                          mse_threshold=mse_threshold)
     train, test = pp.split_by_class(main_df, labels,test_size=test_size, random_state=random_state)
 

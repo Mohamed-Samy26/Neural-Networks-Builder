@@ -1,6 +1,6 @@
-from views import ClassificationApp as v
+from views import ClassificationApp 
 
 if __name__ == "__main__":    
-    app = v.ClassificationApp()
+    app = ClassificationApp()
     app.run()
     
