@@ -1,11 +1,11 @@
 
-from models import adaline as ad
+from models import Perceptron as slp
 import pandas as pd
 from helpers import preprocessing as pp
 
 
-def infer_adaline(feature1, feature2, y_col= "Class", labels=["BOMBAY", "CALI"],
-                  epochs=10, learning_rate=0.01, bias=0.02,
+def infer_slp(feature1, feature2, y_col= "Class", labels=["BOMBAY", "CALI"],
+                  epochs=30, learning_rate=0.02, bias=0.0,
                   use_bias=True, mse_threshold=0, df=None, test_size=0.4, random_state=78):
     
     if len(labels) != 2:
@@ -14,7 +14,7 @@ def infer_adaline(feature1, feature2, y_col= "Class", labels=["BOMBAY", "CALI"],
     if df is None:
         df = pd.read_excel("Dry_Bean_Dataset.xlsx")
     main_df = df.copy()
-    adaline = ad.Adaline(epochs=epochs, learning_rate=learning_rate, bias=bias, use_bias=use_bias,
+    model = slp.Perceptron(epochs=epochs, learning_rate=learning_rate, bias=bias, use_bias=use_bias,
                          mse_threshold=mse_threshold)
     train, test = pp.train_test_split(main_df, test_size=test_size, random_state=random_state)
 
@@ -26,9 +26,9 @@ def infer_adaline(feature1, feature2, y_col= "Class", labels=["BOMBAY", "CALI"],
     X = train[[feature1, feature2]]
     Y = train[y_col]
 
-    print(adaline)
-    adaline.train(X, Y)
-    print(adaline)
+    print(model)
+    model.train(X, Y)
+    print(model)
 
     test = pp.imputation(test, inplace=True)
     test = pp.standardize_columns(test, inplace=True)
@@ -38,12 +38,8 @@ def infer_adaline(feature1, feature2, y_col= "Class", labels=["BOMBAY", "CALI"],
     x_test = test[[feature1, feature2]]
     y_test = test[y_col]
 
-    print(adaline.accuracy(x_test, y_test))
-    adaline.plot_decision_boundary(
+    print(model.accuracy(x_test, y_test))
+    model.plot_decision_boundary(
         x_test, y_test, feature_names=[feature1, feature2], labels=labels
     )
-    adaline.plot_confusion_matrix(x_test, y_test, labels=labels)    
-
-
-if __name__ == "__main__":
-    infer_adaline(feature1="Area", feature2="Perimeter", y_col="Class", labels=["BOMBAY", "CALI"])
+    model.plot_confusion_matrix(x_test, y_test, labels=labels)
