@@ -43,11 +43,12 @@ class ClassificationApp:
 
 
         self.tabview.pack(fill="both")
-        self.tabview.add("Task 1")
         self.tabview.add("Task 2")
-        self.tabview.tab("Task 1").grid_columnconfigure(0, weight=1)
+        self.tabview.add("Task 1")
         self.tabview.tab("Task 2").grid_columnconfigure(0, weight=1)
+        self.tabview.tab("Task 1").grid_columnconfigure(0, weight=1)
         self.tabview._segmented_button.configure(font= ("Arial", 20, 'bold'))
+
 
         # Make the frame expand to fill the window
         self.app.grid_rowconfigure(0, weight=1)
