@@ -271,7 +271,7 @@ class ClassificationApp:
     def add_neurons_entry(self):
         customtkinter.CTkLabel(
             master=self.frame_4,
-            text="Number of Neurons in each hidden layer" + str(len(self.hidden_layers_neurons)),
+            text="Number of Neurons in each hidden layer " + str(len(self.hidden_layers_neurons) + 1),
             font=("Arial Bold", 16),
             justify="left",
         ).pack(anchor="w", pady=(30, 7), padx=(25))
