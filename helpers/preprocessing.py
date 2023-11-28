@@ -294,3 +294,41 @@ def split_by_class(df: pd.DataFrame, labels: list[str], test_size: float = 0.4, 
         test = test.append(label_test)
 
     return train, test
+
+def xy_split(df: pd.DataFrame, y_column: str, test_size: float = 0.4, random_state:int = 78,  x_columns: list[str] = None):
+    """Split the dataframe into training and testing sets.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        The dataframe to split.
+    y_column : str
+        The column to use as the y values.
+    test_size : float, optional
+        The size of the testing set. The default is 0.4.
+    random_state : int, optional
+        The random state to use for reproducibility. The default is 78.
+    x_columns : list[str], optional
+        The columns to use as the x values. If None, all columns except y_column are used.
+        The default is None.
+
+    Returns
+    -------
+    pd.DataFrame
+        The training set.
+    pd.DataFrame
+        The testing set.
+    """
+
+    train, test = train_test_split(df, test_size=test_size, random_state=random_state)
+    
+    if x_columns is None:
+        x_columns = df.columns.drop(y_column)
+    
+    train_x = train[x_columns]
+    train_y = train[y_column]
+    test_x = test[x_columns]
+    test_y = test[y_column]
+    
+    return train_x, test_x, train_y, test_y
+    

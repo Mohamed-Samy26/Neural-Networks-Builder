@@ -37,3 +37,9 @@ def get_activation(activation_name):
     if activation_name not in activation_data:
         raise Exception('Invalid activation function')
     return activation_data[activation_name]['function'], activation_data[activation_name]['derivative']
+
+
+def get_vectorized_activation(activation_name):
+    if activation_name not in activation_data:
+        raise Exception('Invalid activation function')
+    return np.vectorize(activation_data[activation_name]['function']), np.vectorize(activation_data[activation_name]['derivative'])
