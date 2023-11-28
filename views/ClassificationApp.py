@@ -2,6 +2,7 @@ import customtkinter
 import tkinterDnD
 from CTkMessagebox import CTkMessagebox
 from controllers import slp_controller, adaline_controller
+from models.LayerInfo import LayerInfo
 
 
 class ClassificationApp:
@@ -41,14 +42,12 @@ class ClassificationApp:
         # create tabview
         self.tabview = customtkinter.CTkTabview(self.frame, corner_radius=10)
 
-
         self.tabview.pack(fill="both")
         self.tabview.add("Task 2")
         self.tabview.add("Task 1")
         self.tabview.tab("Task 2").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Task 1").grid_columnconfigure(0, weight=1)
-        self.tabview._segmented_button.configure(font= ("Arial", 20, 'bold'))
-
+        self.tabview._segmented_button.configure(font=("Arial", 20, 'bold'))
 
         # Make the frame expand to fill the window
         self.app.grid_rowconfigure(0, weight=1)
@@ -196,43 +195,11 @@ class ClassificationApp:
 
         # bad anchor "subset": must be n, ne, e, se, s, sw, w, nw, or center
 
-        customtkinter.CTkLabel(
-            master=self.frame_4,
-            text="Number Of Hidden Layers",
-            font=("Arial Bold", 16),
-            justify="left",
-        ).pack(anchor="w", pady=(5, 7), padx=(25))
+        self.hidden_layers_neurons = []
+        self.hidden_layers_bias = []
 
-        self.task2_number_Of_Hidden_Layers = customtkinter.CTkEntry(
-            master=self.frame_4,
-            placeholder_text="Please enter a integer",
-            fg_color="#f9fdff",
-            font=("Arial Bold", 16),
-            border_width=0,
-            corner_radius=5,
-            height=50,
-            text_color="#000000",
-        )
-        self.task2_number_Of_Hidden_Layers.pack(fill="x", anchor="w", padx=(25))
-
-        customtkinter.CTkLabel(
-            master=self.frame_4,
-            text="Number of Neurons in each hidden layer",
-            font=("Arial Bold", 16),
-            justify="left",
-        ).pack(anchor="w", pady=(30, 7), padx=(25))
-
-        self.task2_numberOfNeurons = customtkinter.CTkEntry(
-            master=self.frame_4,
-            placeholder_text="Please enter an integer",
-            fg_color="#f9fdff",
-            font=("Arial Bold", 16),
-            border_width=0,
-            corner_radius=5,
-            height=50,
-            text_color="#000000",
-        )
-        self.task2_numberOfNeurons.pack(fill="x", anchor="w", padx=(25))
+        customtkinter.CTkButton(self.frame_4, text="Add a Hidden Layer", command=self.add_hidden_layer).pack(
+            pady=(10, 0))
 
         customtkinter.CTkLabel(
             master=self.frame_4,
@@ -288,9 +255,6 @@ class ClassificationApp:
         )
         self.radiobutton_2.grid(column=0, row=3, sticky="w", pady=(15, 0), padx=(15, 0))
 
-        self.task2_bias = customtkinter.CTkCheckBox(self.frame_3, text="Bias")
-        self.task2_bias.grid(column=0, row=6, sticky="w", pady=(50, 0), padx=(15, 0))
-
         self.Classify = customtkinter.CTkButton(
             self.tabview.tab("Task 2"),
             command=self.task2_button_callback,
@@ -299,6 +263,37 @@ class ClassificationApp:
             height=100,
         )
         self.Classify.pack(fill="x", anchor="w", padx=(60))
+
+    def add_hidden_layer(self):
+        self.add_neurons_entry()
+        self.add_bias_entry()
+
+    def add_neurons_entry(self):
+        customtkinter.CTkLabel(
+            master=self.frame_4,
+            text="Number of Neurons in each hidden layer" + str(len(self.hidden_layers_neurons)),
+            font=("Arial Bold", 16),
+            justify="left",
+        ).pack(anchor="w", pady=(30, 7), padx=(25))
+
+        entry = customtkinter.CTkEntry(
+            master=self.frame_4,
+            placeholder_text="Please enter an integer",
+            fg_color="#f9fdff",
+            font=("Arial Bold", 16),
+            border_width=0,
+            corner_radius=5,
+            height=50,
+            text_color="#000000",
+        )
+        entry.pack(fill="x", anchor="w", padx=(25))
+        self.hidden_layers_neurons.append(entry)
+
+    def add_bias_entry(self):
+        entry = customtkinter.CTkCheckBox(self.frame_4, text="Bias")
+        entry.pack(fill="x", anchor="w", padx=(25), pady=(10, 0))
+
+        self.hidden_layers_bias.append(entry)
 
     def is_number(self, value):
         try:
@@ -389,12 +384,12 @@ class ClassificationApp:
             )
             return False, None
 
-    def validate_numberOfNeurons(self, numberOfNeurons):
+    def validate_eachHiddenLayer(self, numberOfNeurons, bias):
         try:
             int_numberOfNeurons = int(numberOfNeurons)
             if int_numberOfNeurons < 1:
                 raise ValueError("Number Of Neurons must be greater than 0")
-            return True, int_numberOfNeurons
+            return True, LayerInfo(bias, int_numberOfNeurons)
         except ValueError:
             CTkMessagebox(
                 title="Error",
@@ -440,16 +435,17 @@ class ClassificationApp:
                 classes_value,
             )
         else:
+            neurons_in_each_layer = []
 
-            valid_number_of_hidden_layers, int_number_of_hidden_layers = self.validate_numberOfHiddenLayers(
-                self.task2_number_Of_Hidden_Layers.get())
-            if not valid_number_of_hidden_layers:
-                return False
+            self.validate_numberOfHiddenLayers(len(self.hidden_layers_neurons))
 
-            valid_number_of_neurons, int_number_of_neurons = self.validate_numberOfNeurons(
-                self.task2_numberOfNeurons.get())
-            if not valid_number_of_neurons:
-                return False
+            for i in range(len(self.hidden_layers_neurons)):
+                neuron = self.hidden_layers_neurons[i].get()
+                bias = self.hidden_layers_bias[i].get()
+                valid_layer, layer_info = self.validate_eachHiddenLayer(neuron , bias)
+                if not valid_layer:
+                    return False
+                neurons_in_each_layer.append(layer_info)
 
             valid_learning_rate, float_learning_rate = self.validate_learning_rate(self.task2_learningRate.get())
             if not valid_learning_rate:
@@ -461,8 +457,7 @@ class ClassificationApp:
 
             return (
                 True,
-                int_number_of_hidden_layers,
-                int_number_of_neurons,
+                neurons_in_each_layer,
                 float_learning_rate,
                 int_epochs,
             )
@@ -551,21 +546,18 @@ class ClassificationApp:
     def task2_button_callback(self):
         (
             validated,
-            int_number_of_hidden_layers,
-            int_number_of_neurons,
+            neurons_in_each_layer,
             learning_rate_value,
             int_epochs,
         ) = self.validate(2)
 
-        if not validated:
-            return
+        for i in neurons_in_each_layer:
+            print("Neuron Count : ", i.neuron_count)
+            print("Bias : ", i.has_bias)
+            print("\n")
 
-        print("Number of Hidden Layers:", int_number_of_hidden_layers)
-        print("Number Of Neurons:", int_number_of_neurons)
-        print("Learning Rate:", learning_rate_value)
-        print("Epochs:", int_epochs)
-        print("Bias:", self.task2_bias.get())
-        print("Activation:", self.isSigmoid.get())
+        print("Learning Rate : ", learning_rate_value)
+        print("Epochs : ", int_epochs)
 
         if self.isSigmoid.get() == 0:
             print("Hyperbolic Tangent")
