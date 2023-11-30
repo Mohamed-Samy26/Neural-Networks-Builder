@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 
@@ -261,8 +262,14 @@ def train_test_split(df: pd.DataFrame, test_size: float = 0.4, random_state: int
 
     return train, test
 
-def split_by_class(df: pd.DataFrame, labels: list[str], test_size: float = 0.4, random_state: int = 78,
-                   class_column: str = "Class"):
+
+def split_by_class(
+    df: pd.DataFrame,
+    labels: list[str],
+    test_size: float = 0.4,
+    random_state: int = 78,
+    class_column: str = "Class",
+):
     """Split the dataframe into training and testing sets.
 
     Parameters
@@ -289,13 +296,22 @@ def split_by_class(df: pd.DataFrame, labels: list[str], test_size: float = 0.4, 
     test = pd.DataFrame()
     for label in labels:
         label_df = df[df[class_column] == label]
-        label_train, label_test = train_test_split(label_df, test_size=test_size, random_state=random_state)
+        label_train, label_test = train_test_split(
+            label_df, test_size=test_size, random_state=random_state
+        )
         train = train.append(label_train)
         test = test.append(label_test)
 
     return train, test
 
-def xy_split(df: pd.DataFrame, y_column: str, test_size: float = 0.4, random_state:int = 78,  x_columns: list[str] = None):
+
+def xy_split(
+    df: pd.DataFrame,
+    y_column: str,
+    test_size: float = 0.4,
+    random_state: int = 78,
+    x_columns: list[str] = None,
+):
     """Split the dataframe into training and testing sets.
 
     Parameters
@@ -321,14 +337,62 @@ def xy_split(df: pd.DataFrame, y_column: str, test_size: float = 0.4, random_sta
     """
 
     train, test = train_test_split(df, test_size=test_size, random_state=random_state)
-    
+
     if x_columns is None:
         x_columns = df.columns.drop(y_column)
-    
+
     train_x = train[x_columns]
     train_y = train[y_column]
     test_x = test[x_columns]
     test_y = test[y_column]
-    
+
     return train_x, test_x, train_y, test_y
-    
+
+
+# # function to convert y values 0,1,2,... to one hot encoded list `[[1,0,0,...], [0,1,0,...], ...]`
+# def y_to_one_hot(y: pd.Series):
+#     """Convert a series of y values to one hot encoded list.
+
+#     Parameters
+#     ----------
+#     y : pd.Series
+#         The series to convert.
+
+#     Returns
+#     -------
+#     list[list[float]]
+#         The one hot encoded list.
+#     """
+
+#     values = [[1 if i == j else 0 for i in range(y.max() + 1)] for j in y]
+#     # map of class names to one hot encoded values
+#     one_hot_map = {
+#         class_name: [1 if i == class_index else 0 for i in range(y.max() + 1)]
+#         for class_index, class_name in enumerate(y.unique())
+#     }
+
+#     return np.array(values), one_hot_map
+
+def y_to_one_hot(y: pd.Series, map:dict = None):
+    """Convert a series of y values to one hot encoded list.
+
+    Parameters
+    ----------
+    y : pd.Series
+        The series to convert.
+
+    Returns
+    -------
+    list[list[float]]
+        The one hot encoded list.
+    """
+
+    if map is None:
+        map = {
+            class_name: [1 if i == class_index else 0 for i in range(y.max() + 1)]
+            for class_index, class_name in enumerate(y.unique())
+        }
+
+    values = [map[class_name] for class_name in y]
+
+    return np.array(values), map
