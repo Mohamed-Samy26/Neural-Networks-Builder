@@ -93,13 +93,14 @@ class MultiLayerPrecepetron:
             conf_matrix[np.argmax(y_pred)][np.argmax(y[i])] += 1
         return conf_matrix
 
-    def plot_confusion_matrix(self, x, y, labels_map=None):
+    def plot_confusion_matrix(self, x, y, labels_map=None, title="Confusion Matrix"):
         conf_matrix = self.confusion_matrix(x, y)
         df_cm = pd.DataFrame(conf_matrix, index=self.classes, columns=self.classes)
         plt.figure(figsize=(10, 7))
         sn.heatmap(df_cm, annot=True)
         plt.xlabel("Predicted")
         plt.ylabel("Actual")
+        plt.title(title)
         plt.show()
 
     def print_layers(self):

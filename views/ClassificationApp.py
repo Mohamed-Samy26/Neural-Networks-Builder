@@ -572,7 +572,7 @@ class ClassificationApp:
             print("Hyperbolic Tangent")
         else:
             print("Sigmoid")
-        model, accuracy = mlp_controller.infer_mlp(
+        model, accuracy_test, accuracy_train = mlp_controller.infer_mlp(
             layers=layers,
             activation="sigmoid" if self.isSigmoid.get() == 1 else "tanh",
             epochs=int_epochs,
@@ -581,7 +581,7 @@ class ClassificationApp:
 
         CTkMessagebox(
             title="Accuracy",
-            message="Accuracy : " + str(accuracy) + "%",
+            message="Test Accuracy : " + str(accuracy_test) + "%, \n" + "Train Accuracy : " + str(accuracy_train) + "%",
             icon="info",
         )
 
