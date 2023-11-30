@@ -71,7 +71,7 @@ class MultiLayerPrecepetron:
 
     def train(self, x, y, epochs=1000, lr=0.01):
         for epoch in range(epochs):
-            print("Epoch", epoch)
+            print("At Epoch: ", epoch+1)
             for i in range(len(x)):
                 y_pred = self.forward(x[i])
                 dA, dW, db = self.backward(x[i], y[i], y_pred, lr)
@@ -81,7 +81,6 @@ class MultiLayerPrecepetron:
         y = np.array(y)
         correct = 0
         for i in range(len(x)):
-            print("Predicting", i, x.shape, y.shape)
             y_pred = self.forward(x[i])
             if np.argmax(y_pred) == np.argmax(y[i]):
                 correct += 1
@@ -94,15 +93,13 @@ class MultiLayerPrecepetron:
             conf_matrix[np.argmax(y_pred)][np.argmax(y[i])] += 1
         return conf_matrix
 
-    def plot_confusion_matrix(self, x, y):
+    def plot_confusion_matrix(self, x, y, labels_map=None):
         conf_matrix = self.confusion_matrix(x, y)
-        df_cm = pd.DataFrame(
-            conf_matrix,
-            index=[i for i in self.classes],
-            columns=[i for i in self.classes],
-        )
+        df_cm = pd.DataFrame(conf_matrix, index=self.classes, columns=self.classes)
         plt.figure(figsize=(10, 7))
         sn.heatmap(df_cm, annot=True)
+        plt.xlabel("Predicted")
+        plt.ylabel("Actual")
         plt.show()
 
     def print_layers(self):

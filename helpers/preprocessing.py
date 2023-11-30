@@ -224,6 +224,12 @@ def label_encode(
     """
 
     label_encoded_df = df
+    map = dict(
+        zip(
+            label_encoded_df[column].astype("category").cat.codes,
+            label_encoded_df[column],
+        )
+    )
 
     if not inplace:
         label_encoded_df = df.copy()
@@ -236,7 +242,7 @@ def label_encode(
     else:
         label_encoded_df[column] = label_encoded_df[column].astype("category").cat.codes
 
-    return label_encoded_df
+    return label_encoded_df, map
 
 
 def train_test_split(df: pd.DataFrame, test_size: float = 0.4, random_state: int = 78):

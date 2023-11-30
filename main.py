@@ -8,6 +8,5 @@ import controllers.mlp_controller as mlp
 
 
 if __name__ == "__main__":
-    # app = ClassificationApp()
-    # app.run()
-    mlp.infer_mlp([li.LayerInfo(True, 5, "hidden", "sigmoid")])
+    app = ClassificationApp()
+    app.run()

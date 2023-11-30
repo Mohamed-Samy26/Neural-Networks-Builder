@@ -1,7 +1,7 @@
 import customtkinter
 import tkinterDnD
 from CTkMessagebox import CTkMessagebox
-from controllers import slp_controller, adaline_controller
+from controllers import mlp_controller, slp_controller, adaline_controller
 from models.LayerInfo import LayerInfo
 
 
@@ -47,7 +47,7 @@ class ClassificationApp:
         self.tabview.add("Task 1")
         self.tabview.tab("Task 2").grid_columnconfigure(0, weight=1)
         self.tabview.tab("Task 1").grid_columnconfigure(0, weight=1)
-        self.tabview._segmented_button.configure(font=("Arial", 20, 'bold'))
+        self.tabview._segmented_button.configure(font=("Arial", 20, "bold"))
 
         # Make the frame expand to fill the window
         self.app.grid_rowconfigure(0, weight=1)
@@ -198,8 +198,9 @@ class ClassificationApp:
         self.hidden_layers_neurons = []
         self.hidden_layers_bias = []
 
-        customtkinter.CTkButton(self.frame_4, text="Add a Hidden Layer", command=self.add_hidden_layer).pack(
-            pady=(10, 0))
+        customtkinter.CTkButton(
+            self.frame_4, text="Add a Hidden Layer", command=self.add_hidden_layer
+        ).pack(pady=(10, 0))
 
         customtkinter.CTkLabel(
             master=self.frame_4,
@@ -271,7 +272,8 @@ class ClassificationApp:
     def add_neurons_entry(self):
         customtkinter.CTkLabel(
             master=self.frame_4,
-            text="Number of Neurons in each hidden layer " + str(len(self.hidden_layers_neurons) + 1),
+            text="Number of Neurons in each hidden layer "
+            + str(len(self.hidden_layers_neurons) + 1),
             font=("Arial Bold", 16),
             justify="left",
         ).pack(anchor="w", pady=(30, 7), padx=(25))
@@ -399,9 +401,10 @@ class ClassificationApp:
             return False, None
 
     def validate(self, task):
-
         if task == 1:
-            valid_learning_rate, float_learning_rate = self.validate_learning_rate(self.learning_rate.get())
+            valid_learning_rate, float_learning_rate = self.validate_learning_rate(
+                self.learning_rate.get()
+            )
             if not valid_learning_rate:
                 return False
 
@@ -442,16 +445,20 @@ class ClassificationApp:
             for i in range(len(self.hidden_layers_neurons)):
                 neuron = self.hidden_layers_neurons[i].get()
                 bias = self.hidden_layers_bias[i].get()
-                valid_layer, layer_info = self.validate_eachHiddenLayer(neuron , bias)
+                valid_layer, layer_info = self.validate_eachHiddenLayer(neuron, bias)
                 if not valid_layer:
                     return False
                 neurons_in_each_layer.append(layer_info)
 
-            valid_learning_rate, float_learning_rate = self.validate_learning_rate(self.task2_learningRate.get())
+            valid_learning_rate, float_learning_rate = self.validate_learning_rate(
+                self.task2_learningRate.get()
+            )
             if not valid_learning_rate:
                 return False
 
-            valid_epochs, int_epochs = self.validate_epochs(self.task2_NumberOfEpochs.get())
+            valid_epochs, int_epochs = self.validate_epochs(
+                self.task2_NumberOfEpochs.get()
+            )
             if not valid_epochs:
                 return False
 
@@ -550,8 +557,10 @@ class ClassificationApp:
             learning_rate_value,
             int_epochs,
         ) = self.validate(2)
-
+        layers = []
         for i in neurons_in_each_layer:
+            activation = "sigmoid" if self.isSigmoid.get() == 1 else "tanh"
+            layers.append(LayerInfo(i.has_bias, i.neuron_count, "hidden", activation))
             print("Neuron Count : ", i.neuron_count)
             print("Bias : ", i.has_bias)
             print("\n")
@@ -563,6 +572,18 @@ class ClassificationApp:
             print("Hyperbolic Tangent")
         else:
             print("Sigmoid")
+        model, accuracy = mlp_controller.infer_mlp(
+            layers=layers,
+            activation="sigmoid" if self.isSigmoid.get() == 1 else "tanh",
+            epochs=int_epochs,
+            lr=learning_rate_value,
+        )
+
+        CTkMessagebox(
+            title="Accuracy",
+            message="Accuracy : " + str(accuracy) + "%",
+            icon="info",
+        )
 
     def run(self):
         self.app.mainloop()
