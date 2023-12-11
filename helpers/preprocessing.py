@@ -4,7 +4,7 @@ import pandas as pd
 
 def normalize_columns(df: pd.DataFrame, columns: list = None, inplace: bool = False):
     """Normalize the values of the given columns of a dataframe.
-
+    make all values between 0 and 1
     Parameters
     ----------
     df : pd.DataFrame
@@ -121,6 +121,7 @@ def one_hot_encoding(df: pd.DataFrame, columns: list = None, inplace: bool = Fal
 
 def standardize_columns(df: pd.DataFrame, columns: list = None, inplace: bool = False):
     """Standardize the values of the given columns of a dataframe.
+    make all values have mean 0 and std 1 to fit a normal distribution
 
     Parameters
     ----------
@@ -271,7 +272,7 @@ def train_test_split(df: pd.DataFrame, test_size: float = 0.4, random_state: int
 
 def split_by_class(
     df: pd.DataFrame,
-    labels: list[str],
+    labels: list[str] = None,
     test_size: float = 0.4,
     random_state: int = 78,
     class_column: str = "Class",
@@ -300,13 +301,17 @@ def split_by_class(
 
     train = pd.DataFrame()
     test = pd.DataFrame()
+    
+    if labels is None:
+        labels = df[class_column].unique()
+    
     for label in labels:
         label_df = df[df[class_column] == label]
         label_train, label_test = train_test_split(
             label_df, test_size=test_size, random_state=random_state
         )
-        train = train.append(label_train)
-        test = test.append(label_test)
+        train = pd.concat([train, label_train])
+        test = pd.concat([test, label_test])
 
     return train, test
 
@@ -342,7 +347,7 @@ def xy_split(
         The testing set.
     """
 
-    train, test = train_test_split(df, test_size=test_size, random_state=random_state)
+    train, test = split_by_class(df, test_size=test_size, random_state=random_state)
 
     if x_columns is None:
         x_columns = df.columns.drop(y_column)
