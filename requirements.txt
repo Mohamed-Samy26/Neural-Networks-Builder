@@ -1,6 +1,8 @@
 CTkMessagebox==2.5
 customtkinter==5.2.1
 matplotlib==3.5.2
-numpy==1.25.2
-pandas==1.4.2
+numpy==1.26.2
+pandas==2.1.4
 python_tkdnd==0.2.1
+seaborn==0.11.2
+tqdm==4.64.0

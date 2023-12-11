@@ -26,10 +26,10 @@ class Perceptron:
     def backward(self, X: np.ndarray, Y: np.ndarray):
         y_pred = self.forward(X)
         error = Y - y_pred  # Calculate the error
-        self.weight += self.learning_rate * np.dot(X.T, error)  # Update weights
+        self.weight += self.learning_rate * np.dot(X.T, error.astype(float))  # Update weights
         
         if self.use_bias:
-            self.bias += self.learning_rate * np.sum(error)  # Update bias
+            self.bias += self.learning_rate * np.sum(error.astype(float))  # Update bias
         return np.mean(error**2)
 
     def train(self, X: np.ndarray, Y: np.ndarray):
